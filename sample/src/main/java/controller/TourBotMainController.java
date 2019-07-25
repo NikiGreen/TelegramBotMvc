@@ -19,19 +19,30 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.core.env.Environment;
+import repository.CityInfoRepository;
 
 @SpringBootApplication
 @EnableTelegram
 @BotController
 public class TourBotMainController implements TelegramMvcConfiguration {
+
+    private final CityInfoRepository cityInfoRepository;
     private static final Logger logger = LoggerFactory.getLogger(TourBotMainController.class);
 
-    @Autowired
     private Environment environment;
+
+    @Autowired
+    public TourBotMainController(CityInfoRepository cityInfoRepository, Environment environment) {
+        this.cityInfoRepository = cityInfoRepository;
+        this.environment = environment;
+    }
+
+
 
     public static void main(String[] args) {
         SpringApplication.run(TourBotMainController.class);
     }
+
 
     @Override
     public void configuration(TelegramBotBuilder telegramBotBuilder) {
