@@ -1,7 +1,7 @@
-package repository;
+package com.example.repository;
 
 
-import model.CityInfo;
+import com.example.model.CityInfo;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -10,4 +10,7 @@ import java.util.List;
 @Repository
 public interface CityInfoRepository extends JpaRepository<CityInfo,Long> {
     List<CityInfo> findByCityName(String cityName);
+
+    @Override
+    void deleteById(Long id);
 }
