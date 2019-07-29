@@ -139,14 +139,14 @@ public class TourBotMainController implements TelegramMvcConfiguration {
         String parametrForAnswerAfterCommand;
 
         if (UserSession.getCreate()) {
-            UserCommandUpdater.userSessionDelete(false);
+            UserCommandUpdater.userSessionReset(false);
             String[] aboutCity = text.split(" - ");
             CityInfo cityInfo = new CityInfo(aboutCity[0], aboutCity[1]);
             cityInfoService.addCityInfo(cityInfo);
             parametrForAnswerAfterCommand = "Описание города создано!!!";
 
         } else if (UserSession.getUpdate()) {
-            UserCommandUpdater.userSessionDelete(false);
+            UserCommandUpdater.userSessionReset(false);
             String[] aboutCity = text.split(" - ");
             cityInfoService.deleteByName(aboutCity[0]);
             CityInfo cityInfo = new CityInfo(aboutCity[0], aboutCity[1]);
@@ -154,12 +154,12 @@ public class TourBotMainController implements TelegramMvcConfiguration {
             parametrForAnswerAfterCommand = "Описание города обновлено!!!";
 
         } else if (UserSession.getDelete()) {
-            UserCommandUpdater.userSessionDelete(false);
+            UserCommandUpdater.userSessionReset(false);
             cityInfoService.deleteByName(text);
             parametrForAnswerAfterCommand = "Описание города удалено!!!";
 
         } else {
-            UserCommandUpdater.userSessionDelete(false);
+            UserCommandUpdater.userSessionReset(false);
             if (cityInfoService.getByName(text).size() > 0) {
                 parametrForAnswerAfterCommand = cityInfoService.getByName(text).get(0).getCityName() + " - " +
                         cityInfoService.getByName(text).get(0).getCityInfo();
