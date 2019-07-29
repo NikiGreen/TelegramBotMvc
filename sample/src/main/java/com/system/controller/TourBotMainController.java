@@ -1,9 +1,9 @@
-package com.example.controller;
+package com.system.controller;
 
-import com.example.model.CityInfo;
-import com.example.service.CityInfoService;
-import com.example.session.UserCommandUpdater;
-import com.example.session.UserSession;
+import com.system.model.CityInfo;
+import com.system.service.CityInfoService;
+import com.system.session.UserCommandUpdater;
+import com.system.session.UserSession;
 import com.github.telegram.mvc.api.BotController;
 import com.github.telegram.mvc.api.BotRequest;
 import com.github.telegram.mvc.api.EnableTelegram;
@@ -141,9 +141,12 @@ public class TourBotMainController implements TelegramMvcConfiguration {
         if (UserSession.getCreate()) {
             UserCommandUpdater.userSessionReset(false);
             String[] aboutCity = text.split(" - ");
+            if(cityInfoService.getByName(aboutCity[0]).size() < 1){
             CityInfo cityInfo = new CityInfo(aboutCity[0], aboutCity[1]);
             cityInfoService.addCityInfo(cityInfo);
-            parametrForAnswerAfterCommand = "Описание города создано!!!";
+            parametrForAnswerAfterCommand = "Описание города создано!!!";}
+            else
+                parametrForAnswerAfterCommand="Такой город уже есть в базе, используйте /update.";
 
         } else if (UserSession.getUpdate()) {
             UserCommandUpdater.userSessionReset(false);

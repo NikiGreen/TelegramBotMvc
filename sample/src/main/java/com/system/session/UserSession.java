@@ -1,4 +1,4 @@
-package com.example.session;
+package com.system.session;
 
 import org.springframework.stereotype.Component;
 

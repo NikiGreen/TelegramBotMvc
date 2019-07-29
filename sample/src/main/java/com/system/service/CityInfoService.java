@@ -1,6 +1,6 @@
-package com.example.service;
+package com.system.service;
 
-import com.example.model.CityInfo;
+import com.system.model.CityInfo;
 
 import java.util.List;
 

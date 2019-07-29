@@ -1,7 +1,7 @@
-package com.example.repository;
+package com.system.repository;
 
 
-import com.example.model.CityInfo;
+import com.system.model.CityInfo;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;

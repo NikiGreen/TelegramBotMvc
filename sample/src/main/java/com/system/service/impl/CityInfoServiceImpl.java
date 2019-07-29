@@ -1,10 +1,10 @@
-package com.example.service.impl;
+package com.system.service.impl;
 
-import com.example.model.CityInfo;
+import com.system.model.CityInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import com.example.repository.CityInfoRepository;
-import com.example.service.CityInfoService;
+import com.system.repository.CityInfoRepository;
+import com.system.service.CityInfoService;
 
 import java.util.List;
 
