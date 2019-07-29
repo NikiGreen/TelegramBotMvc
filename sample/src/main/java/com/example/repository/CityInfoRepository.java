@@ -9,7 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 @Repository
-public interface CityInfoRepository extends JpaRepository<CityInfo,Long> {
+public interface CityInfoRepository extends JpaRepository<CityInfo, Long> {
     List<CityInfo> findByCityName(String cityName);
 
     @Transactional

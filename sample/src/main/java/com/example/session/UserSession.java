@@ -14,34 +14,35 @@ public class UserSession {
     public UserSession() {
     }
 
-    public  void setCurrentUserCommandCreate(Boolean command) {
+    public void setCurrentUserCommandCreate(Boolean command) {
         create.set(command);
     }
 
-    public  void setCurrentUserCommandcUpdate(Boolean command) {
+    public void setCurrentUserCommandcUpdate(Boolean command) {
         udate.set(command);
     }
-    public  void setCurrentUserCommandcDelete(Boolean command) {
+
+    public void setCurrentUserCommandcDelete(Boolean command) {
         delete.set(command);
     }
 
-    public  Boolean getCurrentUserCommand() {
+    public Boolean getCurrentUserCommand() {
         return false;
     }
 
-    public  Boolean getCreate() {
+    public Boolean getCreate() {
         return create.get();
     }
 
-    public  Boolean getUdate() {
+    public Boolean getUdate() {
         return udate.get();
     }
 
-    public  Boolean getDelete() {
+    public Boolean getDelete() {
         return delete.get();
     }
 
-    public  ThreadLocal<Boolean> getRemove() {
+    public ThreadLocal<Boolean> getRemove() {
         return delete;
     }
 }

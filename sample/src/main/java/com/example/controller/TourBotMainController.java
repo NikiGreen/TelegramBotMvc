@@ -37,8 +37,10 @@ public class TourBotMainController implements TelegramMvcConfiguration {
 
     public static final String CREATE_CITY_MESSAGE = "Введите имя города и через дефис информацию о нем. Пример: Минск - Лучший город на земле!";
     public static final String UPDATE_CITY_MESSAGE = "Введите имя города информацию о которомо вы хотите изменить и через дефис информацию о нем. " +
-            "Пример: Минск - Лучший город на замле!";
+            "Пример: Минск - Лучший город на земле!";
     public static final String DELETE_CITY_MESSAGE = "Введите имя города, который вы хотите удалить! Пример: Минск";
+    public static final String INFO_MESSAGE = "Это бот для сохранения и вывода информации о городах.\n\nБот чувствителен к пробелам, т.е. описание города должно быть строго" +
+            " описано в формате \"Город - описание. \", а не \"Город-описание\".\n\nДля управления ботом используются команды \"/create\",\"/update\",\"/delete\",\"/info\"." ;
 
     private CityInfoService cityInfoService;
     private Environment environment;
@@ -57,7 +59,7 @@ public class TourBotMainController implements TelegramMvcConfiguration {
                 .token(environment.getProperty("telegram.bot.token")).alias("myFirsBean");
     }
 
-    @BotRequest("/start")
+    @BotRequest("/info")
     BaseRequest hello(String text,
                       Long chatId,
                       TelegramRequest telegramRequest,
@@ -67,7 +69,7 @@ public class TourBotMainController implements TelegramMvcConfiguration {
                       Chat chat,
                       User user
     ) {
-        return new SendMessage(chatId, message.text());
+        return new SendMessage(chatId, INFO_MESSAGE);
     }
 
     @BotRequest(value = "/create")
@@ -82,11 +84,13 @@ public class TourBotMainController implements TelegramMvcConfiguration {
                        String id
     ) {
         UserSessionVer.setCreate(true);
-        userSession.setCurrentUserCommandCreate(true);
+        UserSessionVer.setUpdate(false);
+        UserSessionVer.setDelete(false);
 
-      return new SendMessage(chatId, CREATE_CITY_MESSAGE);
+        return new SendMessage(chatId, CREATE_CITY_MESSAGE);
 
     }
+
     @BotRequest(value = "/update")
     BaseRequest update(String text,
                        Long chatId,
@@ -98,12 +102,16 @@ public class TourBotMainController implements TelegramMvcConfiguration {
                        User user,
                        String id
     ) {
+        UserSessionVer.setCreate(false);
         UserSessionVer.setUpdate(true);
-        userSession.setCurrentUserCommandcUpdate(true);
+        UserSessionVer.setDelete(false);
+
 
         return new SendMessage(chatId, UPDATE_CITY_MESSAGE);
 
-    }@BotRequest(value = "/delete")
+    }
+
+    @BotRequest(value = "/delete")
     BaseRequest delete(String text,
                        Long chatId,
                        TelegramRequest telegramRequest,
@@ -114,12 +122,16 @@ public class TourBotMainController implements TelegramMvcConfiguration {
                        User user,
                        String id
     ) {
+        UserSessionVer.setCreate(false);
+        UserSessionVer.setUpdate(false);
         UserSessionVer.setDelete(true);
-        userSession.setCurrentUserCommandcDelete(true);
+
 
         return new SendMessage(chatId, DELETE_CITY_MESSAGE);
 
-    }@BotRequest(value = "{text}")
+    }
+
+    @BotRequest(value = "{text}")
     BaseRequest answer(String text,
                        Long chatId,
                        TelegramRequest telegramRequest,
@@ -130,47 +142,36 @@ public class TourBotMainController implements TelegramMvcConfiguration {
                        User user,
                        String id
     ) {
-       String param="";
-       /* if(userSession.getCreate()){
-param="create";
-            userSession.setCurrentUserCommandCreate(false);
-        }else if(userSession.getUdate()){
-param="update";
-            userSession.setCurrentUserCommandcUpdate(false);
-        }else if(userSession.getDelete()){
-param="delete";
-            userSession.setCurrentUserCommandcDelete(false);
-        }else {
-            if(cityInfoService.getByName(text)!=null)
-            cityInfoService.getByName(text);
-        }*/
+        String param;
 
-        if(UserSessionVer.getCreate()){
-            String[] aboutCity=text.split(" - ");
-            CityInfo cityInfo=new CityInfo(aboutCity[0],aboutCity[1]);
+        if (UserSessionVer.getCreate()) {
+            UserCommandUpdater.userSessionDelete(false);
+            String[] aboutCity = text.split(" - ");
+            CityInfo cityInfo = new CityInfo(aboutCity[0], aboutCity[1]);
             cityInfoService.addCityInfo(cityInfo);
-            param="Описание города создано!!!";
-            UserCommandUpdater.userSessionDelete(false);
-        }else if(UserSessionVer.getUpdate()){
-            cityInfoService.deleteByName(text);
-            String[] aboutCity=text.split(" - ");
-            CityInfo cityInfo=new CityInfo(aboutCity[0],aboutCity[1]);
-            cityInfoService.addCityInfo(cityInfo);
-            param="Описание города обновлено!!!";
-            UserCommandUpdater.userSessionDelete(false);
-        }else if(UserSessionVer.getDelete()){
-            cityInfoService.deleteByName(text);
-            param="Описание города удалено!!!";
-            UserCommandUpdater.userSessionDelete(false);
-        }else {
+            param = "Описание города создано!!!";
 
-            if(cityInfoService.getByName(text).size()>0){
-                param=cityInfoService.getByName(text).get(0).getCityName()+" - "+
+        } else if (UserSessionVer.getUpdate()) {
+            UserCommandUpdater.userSessionDelete(false);
+            String[] aboutCity = text.split(" - ");
+            cityInfoService.deleteByName(aboutCity[0]);
+            CityInfo cityInfo = new CityInfo(aboutCity[0], aboutCity[1]);
+            cityInfoService.addCityInfo(cityInfo);
+            param = "Описание города обновлено!!!";
+
+        } else if (UserSessionVer.getDelete()) {
+            UserCommandUpdater.userSessionDelete(false);
+            cityInfoService.deleteByName(text);
+            param = "Описание города удалено!!!";
+
+        } else {
+            UserCommandUpdater.userSessionDelete(false);
+            if (cityInfoService.getByName(text).size() > 0) {
+                param = cityInfoService.getByName(text).get(0).getCityName() + " - " +
                         cityInfoService.getByName(text).get(0).getCityInfo();
-            }
-            else
-                param="Такого города в базе не существует!!!";
-            UserCommandUpdater.userSessionDelete(false);
+            } else
+                param = "Такого города в базе не существует!!!";
+
         }
         return new SendMessage(chatId, param);
 

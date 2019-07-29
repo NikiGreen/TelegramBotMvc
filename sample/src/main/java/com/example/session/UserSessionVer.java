@@ -4,9 +4,9 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class UserSessionVer {
-    static Boolean create=false;
-    static Boolean update=false;
-    static Boolean delete=false;
+    static Boolean create = false;
+    static Boolean update = false;
+    static Boolean delete = false;
 
     public UserSessionVer() {
     }
