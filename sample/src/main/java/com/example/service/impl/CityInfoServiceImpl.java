@@ -27,8 +27,8 @@ public class CityInfoServiceImpl implements CityInfoService {
     }
 
     @Override
-    public void delete(long id) {
-        cityInfoRepository.deleteById(id);
+    public void deleteByName(String cityName) {
+        cityInfoRepository.deleteAllByCityName(cityName);
     }
 
     @Override

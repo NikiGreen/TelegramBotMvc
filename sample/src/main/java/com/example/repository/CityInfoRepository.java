@@ -11,6 +11,5 @@ import java.util.List;
 public interface CityInfoRepository extends JpaRepository<CityInfo,Long> {
     List<CityInfo> findByCityName(String cityName);
 
-    @Override
-    void deleteById(Long id);
+    void deleteAllByCityName(String cityName);
 }

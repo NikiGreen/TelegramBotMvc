@@ -6,7 +6,7 @@ import java.util.List;
 
 public interface CityInfoService {
     CityInfo addCityInfo(CityInfo bank);
-    void delete(long id);
+    void deleteByName(String cityName);
     List<CityInfo> getByName(String name);
     CityInfo editCityInfo(CityInfo bank);
     List<CityInfo> getAll();

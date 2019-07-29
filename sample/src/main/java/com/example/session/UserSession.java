@@ -6,9 +6,13 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class UserSession {
-    private static final ThreadLocal<Boolean> create = new ThreadLocal<>();
-    private static final ThreadLocal<Boolean> udate = new ThreadLocal<>();
-    private static final ThreadLocal<Boolean> delete = new ThreadLocal<>();
+
+    private final ThreadLocal<Boolean> create = new ThreadLocal<>();
+    private final ThreadLocal<Boolean> udate = new ThreadLocal<>();
+    private final ThreadLocal<Boolean> delete = new ThreadLocal<>();
+
+    public UserSession() {
+    }
 
     public  void setCurrentUserCommandCreate(Boolean command) {
         create.set(command);
@@ -37,7 +41,7 @@ public class UserSession {
         return delete.get();
     }
 
-    public static ThreadLocal<Boolean> getRemove() {
+    public  ThreadLocal<Boolean> getRemove() {
         return delete;
     }
 }

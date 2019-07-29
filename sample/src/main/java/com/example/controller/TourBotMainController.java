@@ -3,6 +3,7 @@ package com.example.controller;
 import com.example.service.CityInfoService;
 import com.example.session.UserCommand;
 import com.example.session.UserSession;
+import com.example.session.UserSessionVer;
 import com.github.telegram.mvc.api.BotController;
 import com.github.telegram.mvc.api.BotRequest;
 import com.github.telegram.mvc.api.EnableTelegram;
@@ -39,11 +40,14 @@ public class TourBotMainController implements TelegramMvcConfiguration {
     private Environment environment;
     private UserSession userSession;
 
+    private UserSessionVer userSessionVer;
+
     @Autowired
-    public TourBotMainController(CityInfoService cityInfoService, Environment environment, UserSession userSession) {
+    public TourBotMainController(CityInfoService cityInfoService, Environment environment, UserSession userSession,UserSessionVer userSessionVer) {
         this.cityInfoService = cityInfoService;
         this.environment = environment;
         this.userSession = userSession;
+        this.userSessionVer=userSessionVer;
     }
 
     @Override
@@ -76,6 +80,7 @@ public class TourBotMainController implements TelegramMvcConfiguration {
                        User user,
                        String id
     ) {
+        userSessionVer.setCreate(true);
         userSession.setCurrentUserCommandCreate(true);
 
       return new SendMessage(chatId, CREATE_CITY_MESSAGE);
@@ -92,6 +97,7 @@ public class TourBotMainController implements TelegramMvcConfiguration {
                        User user,
                        String id
     ) {
+        userSessionVer.setUpdate(true);
         userSession.setCurrentUserCommandcUpdate(true);
 
         return new SendMessage(chatId, UPDATE_CITY_MESSAGE);
@@ -107,6 +113,7 @@ public class TourBotMainController implements TelegramMvcConfiguration {
                        User user,
                        String id
     ) {
+        userSessionVer.setDelete(true);
         userSession.setCurrentUserCommandcDelete(true);
 
         return new SendMessage(chatId, DELETE_CITY_MESSAGE);
@@ -122,20 +129,35 @@ public class TourBotMainController implements TelegramMvcConfiguration {
                        User user,
                        String id
     ) {
-        if(userSession.getCreate()){
-
+       String param="";
+       /* if(userSession.getCreate()){
+param="create";
             userSession.setCurrentUserCommandCreate(false);
         }else if(userSession.getUdate()){
-
+param="update";
             userSession.setCurrentUserCommandcUpdate(false);
         }else if(userSession.getDelete()){
-
+param="delete";
             userSession.setCurrentUserCommandcDelete(false);
         }else {
             if(cityInfoService.getByName(text)!=null)
             cityInfoService.getByName(text);
+        }*/
+
+        if(userSessionVer.getCreate()){
+
+            userSessionVer.setCreate(false);
+        }else if(userSessionVer.getUpdate()){
+           
+            userSessionVer.setUpdate(false);
+        }else if(userSessionVer.getDelete()){
+            cityInfoService.deleteByName(text);
+            userSessionVer.setDelete(false);
+        }else {
+            if(cityInfoService.getByName(text)!=null)
+                cityInfoService.getByName(text);
         }
-        return new SendMessage(chatId, userSession.getCurrentUserCommand().toString());
+        return new SendMessage(chatId, param);
 
     }
 }
