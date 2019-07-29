@@ -1,48 +1,38 @@
 package com.example.session;
 
-import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
-
 
 @Component
 public class UserSession {
-
-    private final ThreadLocal<Boolean> create = new ThreadLocal<>();
-    private final ThreadLocal<Boolean> udate = new ThreadLocal<>();
-    private final ThreadLocal<Boolean> delete = new ThreadLocal<>();
+    private static Boolean create = false;
+    private static Boolean update = false;
+    private static Boolean delete = false;
 
     public UserSession() {
     }
 
-    public void setCurrentUserCommandCreate(Boolean command) {
-        create.set(command);
+
+    public static Boolean getCreate() {
+        return create;
     }
 
-    public void setCurrentUserCommandcUpdate(Boolean command) {
-        udate.set(command);
+    public static void setCreate(Boolean create) {
+        UserSession.create = create;
     }
 
-    public void setCurrentUserCommandcDelete(Boolean command) {
-        delete.set(command);
+    public static Boolean getUpdate() {
+        return update;
     }
 
-    public Boolean getCurrentUserCommand() {
-        return false;
+    public static void setUpdate(Boolean update) {
+        UserSession.update = update;
     }
 
-    public Boolean getCreate() {
-        return create.get();
-    }
-
-    public Boolean getUdate() {
-        return udate.get();
-    }
-
-    public Boolean getDelete() {
-        return delete.get();
-    }
-
-    public ThreadLocal<Boolean> getRemove() {
+    public static Boolean getDelete() {
         return delete;
+    }
+
+    public static void setDelete(Boolean delete) {
+        UserSession.delete = delete;
     }
 }

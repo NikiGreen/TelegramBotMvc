@@ -2,10 +2,8 @@ package com.example.controller;
 
 import com.example.model.CityInfo;
 import com.example.service.CityInfoService;
-import com.example.session.UserCommand;
 import com.example.session.UserCommandUpdater;
 import com.example.session.UserSession;
-import com.example.session.UserSessionVer;
 import com.github.telegram.mvc.api.BotController;
 import com.github.telegram.mvc.api.BotRequest;
 import com.github.telegram.mvc.api.EnableTelegram;
@@ -24,10 +22,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 
-import javax.jws.soap.SOAPBinding;
-import java.util.ArrayList;
-import java.util.List;
-
 
 @EnableTelegram
 @BotController
@@ -35,22 +29,22 @@ public class TourBotMainController implements TelegramMvcConfiguration {
 
     private static final Logger logger = LoggerFactory.getLogger(TourBotMainController.class);
 
-    public static final String CREATE_CITY_MESSAGE = "Введите имя города и через дефис информацию о нем. Пример: Минск - Лучший город на земле!";
-    public static final String UPDATE_CITY_MESSAGE = "Введите имя города информацию о которомо вы хотите изменить и через дефис информацию о нем. " +
+    private static final String CREATE_CITY_MESSAGE = "Введите имя города и через дефис информацию о нем. Пример: Минск - Лучший город на земле!";
+    private static final String UPDATE_CITY_MESSAGE = "Введите имя города информацию о которомо вы хотите изменить и через дефис информацию о нем. " +
             "Пример: Минск - Лучший город на земле!";
-    public static final String DELETE_CITY_MESSAGE = "Введите имя города, который вы хотите удалить! Пример: Минск";
-    public static final String INFO_MESSAGE = "Это бот для сохранения и вывода информации о городах.\n\nБот чувствителен к пробелам, т.е. описание города должно быть строго" +
-            " описано в формате \"Город - описание. \", а не \"Город-описание\".\n\nДля управления ботом используются команды \"/create\",\"/update\",\"/delete\",\"/info\"." ;
+    private static final String DELETE_CITY_MESSAGE = "Введите имя города, который вы хотите удалить! Пример: Минск";
+    private static final String INFO_MESSAGE = "Это бот для сохранения и вывода информации о городах.\n\nБот чувствителен к пробелам, т.е. описание города должно быть строго" +
+            " описано в формате \"Город - описание. \", а не \"Город-описание\".\n\nДля управления ботом используются команды \"/create\",\"/update\",\"/delete\",\"/info\".";
 
     private CityInfoService cityInfoService;
     private Environment environment;
-    private UserSession userSession;
+
 
     @Autowired
-    public TourBotMainController(CityInfoService cityInfoService, Environment environment, UserSession userSession) {
+    public TourBotMainController(CityInfoService cityInfoService, Environment environment) {
         this.cityInfoService = cityInfoService;
         this.environment = environment;
-        this.userSession = userSession;
+
     }
 
     @Override
@@ -83,9 +77,9 @@ public class TourBotMainController implements TelegramMvcConfiguration {
                        User user,
                        String id
     ) {
-        UserSessionVer.setCreate(true);
-        UserSessionVer.setUpdate(false);
-        UserSessionVer.setDelete(false);
+        UserSession.setCreate(true);
+        UserSession.setUpdate(false);
+        UserSession.setDelete(false);
 
         return new SendMessage(chatId, CREATE_CITY_MESSAGE);
 
@@ -102,9 +96,9 @@ public class TourBotMainController implements TelegramMvcConfiguration {
                        User user,
                        String id
     ) {
-        UserSessionVer.setCreate(false);
-        UserSessionVer.setUpdate(true);
-        UserSessionVer.setDelete(false);
+        UserSession.setCreate(false);
+        UserSession.setUpdate(true);
+        UserSession.setDelete(false);
 
 
         return new SendMessage(chatId, UPDATE_CITY_MESSAGE);
@@ -122,9 +116,9 @@ public class TourBotMainController implements TelegramMvcConfiguration {
                        User user,
                        String id
     ) {
-        UserSessionVer.setCreate(false);
-        UserSessionVer.setUpdate(false);
-        UserSessionVer.setDelete(true);
+        UserSession.setCreate(false);
+        UserSession.setUpdate(false);
+        UserSession.setDelete(true);
 
 
         return new SendMessage(chatId, DELETE_CITY_MESSAGE);
@@ -142,38 +136,38 @@ public class TourBotMainController implements TelegramMvcConfiguration {
                        User user,
                        String id
     ) {
-        String param;
+        String parametrForAnswerAfterCommand;
 
-        if (UserSessionVer.getCreate()) {
+        if (UserSession.getCreate()) {
             UserCommandUpdater.userSessionDelete(false);
             String[] aboutCity = text.split(" - ");
             CityInfo cityInfo = new CityInfo(aboutCity[0], aboutCity[1]);
             cityInfoService.addCityInfo(cityInfo);
-            param = "Описание города создано!!!";
+            parametrForAnswerAfterCommand = "Описание города создано!!!";
 
-        } else if (UserSessionVer.getUpdate()) {
+        } else if (UserSession.getUpdate()) {
             UserCommandUpdater.userSessionDelete(false);
             String[] aboutCity = text.split(" - ");
             cityInfoService.deleteByName(aboutCity[0]);
             CityInfo cityInfo = new CityInfo(aboutCity[0], aboutCity[1]);
             cityInfoService.addCityInfo(cityInfo);
-            param = "Описание города обновлено!!!";
+            parametrForAnswerAfterCommand = "Описание города обновлено!!!";
 
-        } else if (UserSessionVer.getDelete()) {
+        } else if (UserSession.getDelete()) {
             UserCommandUpdater.userSessionDelete(false);
             cityInfoService.deleteByName(text);
-            param = "Описание города удалено!!!";
+            parametrForAnswerAfterCommand = "Описание города удалено!!!";
 
         } else {
             UserCommandUpdater.userSessionDelete(false);
             if (cityInfoService.getByName(text).size() > 0) {
-                param = cityInfoService.getByName(text).get(0).getCityName() + " - " +
+                parametrForAnswerAfterCommand = cityInfoService.getByName(text).get(0).getCityName() + " - " +
                         cityInfoService.getByName(text).get(0).getCityInfo();
             } else
-                param = "Такого города в базе не существует!!!";
+                parametrForAnswerAfterCommand = "Такого города в базе не существует!!!";
 
         }
-        return new SendMessage(chatId, param);
+        return new SendMessage(chatId, parametrForAnswerAfterCommand);
 
     }
 }
