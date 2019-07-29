@@ -2,7 +2,7 @@
 
 Техническое описание проекта:
 
- +Java 8;
+ + Java 8;
  +SpringBoot, Spring REST, Spring Data;
  +Data base: PostgreSQL;
  +Build tool: Maven.
