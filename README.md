@@ -2,10 +2,10 @@
 
 Техническое описание проекта:
 
- + Java 8;
- +SpringBoot, Spring REST, Spring Data;
- +Data base: PostgreSQL;
- +Build tool: Maven.
++ Java 8;
++ SpringBoot, Spring REST, Spring Data;
++ Data base: PostgreSQL;
++ Build tool: Maven.
 
 
 Имя бота:Aswer113
