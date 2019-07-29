@@ -53,20 +53,7 @@
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-entitymanager</artifactId>
         </dependency>
-        <!-- <dependency>
-             <groupId>org.telegram</groupId>
-             <artifactId>telegrambots-spring-boot-starter</artifactId>
-             <version>4.3.1</version>
-         </dependency>
 
-         &lt;!&ndash; https://mvnrepository.com/artifact/org.telegram/telegrambotsextensions &ndash;&gt;
-         <dependency>
-             <groupId>org.telegram</groupId>
-             <artifactId>telegrambotsextensions</artifactId>
-             <version>4.3.1</version>
-         </dependency>-->
-
-        <!-- https://mvnrepository.com/artifact/org.telegram/telegrambots -->
         <dependency>
             <groupId>org.telegram</groupId>
             <artifactId>telegrambots</artifactId>
@@ -77,36 +64,6 @@
             <artifactId>hibernate-core</artifactId>
             <version>5.3.9.Final</version>
         </dependency>
-
-        <!-- https://mvnrepository.com/artifact/org.telegram/telegrambots-meta -->
-        <!-- <dependency>
-           <groupId>org.telegram</groupId>
-           <artifactId>telegrambots-meta</artifactId>
-           <version>4.3.1</version>
-         </dependency>
-
-         &lt;!&ndash; https://mvnrepository.com/artifact/org.telegram/telegramapi &ndash;&gt;
-         <dependency>
-           <groupId>org.telegram</groupId>
-           <artifactId>telegramapi</artifactId>
-           <version>66.2</version>
-         </dependency>
-         &lt;!&ndash; https://mvnrepository.com/artifact/com.github.pengrad/java-telegram-bot-api &ndash;&gt;
-
-         <dependency>
-           <groupId>com.github.telegram</groupId>
-           <artifactId>java-telegram-bot</artifactId>-->
-
-        <!-- </dependency>-->
-
-        <!-- https://mvnrepository.com/artifact/org.telegram/telegrambots-chat-session-bot -->
-        <!--<dependency>-->
-        <!--<groupId>org.telegram</groupId>-->
-        <!--<artifactId>telegrambots-chat-session-bot</artifactId>-->
-        <!--<version>4.3.1</version>-->
-        <!--</dependency>-->
-
-
 
     </dependencies>
 

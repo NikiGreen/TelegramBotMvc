@@ -148,28 +148,28 @@ param="delete";
         if(UserSessionVer.getCreate()){
             String[] aboutCity=text.split(" - ");
             CityInfo cityInfo=new CityInfo(aboutCity[0],aboutCity[1]);
-            param="Описание города создано!!!";
             cityInfoService.addCityInfo(cityInfo);
+            param="Описание города создано!!!";
             UserCommandUpdater.userSessionDelete(false);
         }else if(UserSessionVer.getUpdate()){
             cityInfoService.deleteByName(text);
-            String[] aboutCity=text.split("-");
+            String[] aboutCity=text.split(" - ");
             CityInfo cityInfo=new CityInfo(aboutCity[0],aboutCity[1]);
             cityInfoService.addCityInfo(cityInfo);
+            param="Описание города обновлено!!!";
             UserCommandUpdater.userSessionDelete(false);
         }else if(UserSessionVer.getDelete()){
             cityInfoService.deleteByName(text);
+            param="Описание города удалено!!!";
             UserCommandUpdater.userSessionDelete(false);
         }else {
 
             if(cityInfoService.getByName(text).size()>0){
-                List<CityInfo> cityesList;
-                cityesList= cityInfoService.getByName(text);
-                param=cityesList.get(0).getCityName()+" - "+ cityesList.get(0).getCityInfo();
+                param=cityInfoService.getByName(text).get(0).getCityName()+" - "+
+                        cityInfoService.getByName(text).get(0).getCityInfo();
             }
             else
                 param="Такого города в базе не существует!!!";
-
             UserCommandUpdater.userSessionDelete(false);
         }
         return new SendMessage(chatId, param);
