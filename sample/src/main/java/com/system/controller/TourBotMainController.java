@@ -126,7 +126,7 @@ public class TourBotMainController implements TelegramMvcConfiguration {
     }
 
     @BotRequest(value = "{text}")
-    BaseRequest answer(String text,
+    BaseRequest read(String text,
                        Long chatId,
                        TelegramRequest telegramRequest,
                        TelegramBot telegramBot,
