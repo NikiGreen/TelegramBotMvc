@@ -3,7 +3,7 @@
 Техническое описание проекта:
 
 Java 8;
-SpringBoot, Spring REST, Spring JPA, Spring Security
+SpringBoot, Spring REST, Spring JPA
 Data base: PostgreSQL;
 Build tool: Maven.
 
