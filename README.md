@@ -6,4 +6,4 @@
 + Build tool: Maven.
 
 ##### Bot name:Aswer113
-##### Token is located in the resource.
+##### Token is located in the resources.
