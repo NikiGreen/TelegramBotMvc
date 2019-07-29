@@ -21,6 +21,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 
+import javax.jws.soap.SOAPBinding;
+
 
 @EnableTelegram
 @BotController
@@ -28,18 +30,20 @@ public class TourBotMainController implements TelegramMvcConfiguration {
 
     private static final Logger logger = LoggerFactory.getLogger(TourBotMainController.class);
 
-    public static final String CREATE_CITY_MESSAGE = "Введите имя города и через дефис информацию о нем. Пример: Минск - Лучший город на замле!";
+    public static final String CREATE_CITY_MESSAGE = "Введите имя города и через дефис информацию о нем. Пример: Минск - Лучший город на земле!";
     public static final String UPDATE_CITY_MESSAGE = "Введите имя города информацию о которомо вы хотите изменить и через дефис информацию о нем. " +
             "Пример: Минск - Лучший город на замле!";
     public static final String DELETE_CITY_MESSAGE = "Введите имя города, который вы хотите удалить! Пример: Минск";
 
     private CityInfoService cityInfoService;
     private Environment environment;
+    private UserSession userSession;
 
     @Autowired
-    public TourBotMainController(CityInfoService cityInfoService, Environment environment) {
+    public TourBotMainController(CityInfoService cityInfoService, Environment environment, UserSession userSession) {
         this.cityInfoService = cityInfoService;
         this.environment = environment;
+        this.userSession = userSession;
     }
 
     @Override
@@ -62,7 +66,7 @@ public class TourBotMainController implements TelegramMvcConfiguration {
     }
 
     @BotRequest(value = "/create")
-    BaseRequest answer(String text,
+    BaseRequest create(String text,
                        Long chatId,
                        TelegramRequest telegramRequest,
                        TelegramBot telegramBot,
@@ -72,13 +76,13 @@ public class TourBotMainController implements TelegramMvcConfiguration {
                        User user,
                        String id
     ) {
-      UserSession.setCurrentUserCommand(UserCommand.CREATE);
+        userSession.setCurrentUserCommandCreate(true);
 
       return new SendMessage(chatId, CREATE_CITY_MESSAGE);
 
     }
     @BotRequest(value = "/update")
-    BaseRequest save(String text,
+    BaseRequest update(String text,
                        Long chatId,
                        TelegramRequest telegramRequest,
                        TelegramBot telegramBot,
@@ -88,26 +92,11 @@ public class TourBotMainController implements TelegramMvcConfiguration {
                        User user,
                        String id
     ) {
-        UserSession.setCurrentUserCommand(UserCommand.UPDATE);
+        userSession.setCurrentUserCommandcUpdate(true);
 
         return new SendMessage(chatId, UPDATE_CITY_MESSAGE);
 
     }@BotRequest(value = "/delete")
-    BaseRequest edit(String text,
-                       Long chatId,
-                       TelegramRequest telegramRequest,
-                       TelegramBot telegramBot,
-                       Update update,
-                       Message message,
-                       Chat chat,
-                       User user,
-                       String id
-    ) {
-        UserSession.setCurrentUserCommand(UserCommand.DELETE);
-
-        return new SendMessage(chatId, DELETE_CITY_MESSAGE);
-
-    }@BotRequest(value = "{text}")
     BaseRequest delete(String text,
                        Long chatId,
                        TelegramRequest telegramRequest,
@@ -118,8 +107,35 @@ public class TourBotMainController implements TelegramMvcConfiguration {
                        User user,
                        String id
     ) {
+        userSession.setCurrentUserCommandcDelete(true);
 
-        return new SendMessage(chatId, UserSession.getCurrentUserCommand().toString());
+        return new SendMessage(chatId, DELETE_CITY_MESSAGE);
+
+    }@BotRequest(value = "{text}")
+    BaseRequest answer(String text,
+                       Long chatId,
+                       TelegramRequest telegramRequest,
+                       TelegramBot telegramBot,
+                       Update update,
+                       Message message,
+                       Chat chat,
+                       User user,
+                       String id
+    ) {
+        if(userSession.getCreate()){
+
+            userSession.setCurrentUserCommandCreate(false);
+        }else if(userSession.getUdate()){
+
+            userSession.setCurrentUserCommandcUpdate(false);
+        }else if(userSession.getDelete()){
+
+            userSession.setCurrentUserCommandcDelete(false);
+        }else {
+            if(cityInfoService.getByName(text)!=null)
+            cityInfoService.getByName(text);
+        }
+        return new SendMessage(chatId, userSession.getCurrentUserCommand().toString());
 
     }
 }
