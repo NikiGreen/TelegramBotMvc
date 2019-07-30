@@ -1,7 +1,7 @@
 # TelegramBotMvc
 
 + Java 8;
-+ SpringBoot, Spring REST, Spring Data;
++ SpringBoot, Spring MVC, Spring Data;
 + Data base: PostgreSQL;
 + Build tool: Maven.
 
