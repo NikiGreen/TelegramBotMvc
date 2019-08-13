@@ -1,12 +1,9 @@
 # TelegramBotMvc
 
-Техническое описание проекта:
++ Java 8;
++ SpringBoot, Spring MVC, Spring Data;
++ Data base: PostgreSQL;
++ Build tool: Maven.
 
-Java 8;
-SpringBoot, Spring REST, Spring Data;
-Data base: PostgreSQL;
-Build tool: Maven.
-
-
-Имя бота:Aswer113
-Токен находится в файле папки resources.
+##### Bot name:Aswer113
+##### Token is located in the resources.
